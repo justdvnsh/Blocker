@@ -6,6 +6,7 @@ import android.content.Intent
 import android.telephony.TelephonyManager
 import android.widget.Toast
 
+
 class CallReceiver: BroadcastReceiver() {
     override fun onReceive(p0: Context?, intent: Intent?) {
         val state: String? = intent?.getStringExtra(TelephonyManager.EXTRA_STATE)
@@ -22,7 +23,9 @@ class CallReceiver: BroadcastReceiver() {
             TelephonyManager.EXTRA_STATE_RINGING -> {
                 Toast.makeText(p0, "RINGING STATE", Toast.LENGTH_SHORT).show()
                 val number: String? = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER)
-                if (number != null) Toast.makeText(p0, number, Toast.LENGTH_SHORT).show()
+                if (number != null) {
+                    Toast.makeText(p0, number, Toast.LENGTH_SHORT).show()
+                }
                 else Toast.makeText(p0, "NUMBER IS NULL", Toast.LENGTH_SHORT).show()
             }
             TelephonyManager.EXTRA_STATE_OFFHOOK -> {
