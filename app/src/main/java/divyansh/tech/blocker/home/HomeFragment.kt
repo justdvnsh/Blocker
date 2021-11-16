@@ -1,16 +1,29 @@
 package divyansh.tech.blocker.home
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import divyansh.tech.blocker.databinding.FragmentHomeBinding
 import divyansh.tech.blocker.home.utils.HomeViewPagerAdapter
+import timber.log.Timber
+
 
 @AndroidEntryPoint
 class HomeFragment: Fragment() {
@@ -19,18 +32,13 @@ class HomeFragment: Fragment() {
 
     //TODO: Convert this to a shared view model
     //TODO: This viewModel would provide all the contacts.
-    private val viewModel by viewModels<HomeViewModel>()
+    private val viewModel by activityViewModels<HomeViewModel>()
 
-    lateinit var pagerAdapter: HomeViewPagerAdapter
+    private lateinit var pagerAdapter: HomeViewPagerAdapter
     private var mediator: TabLayoutMediator? = null
-    val tabNames= listOf("Contacts","Blocked")
+    private val tabNames= listOf("Contacts","Blocked")
 
-    private val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
-
-        override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-        }
-    }
+    private val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +51,8 @@ class HomeFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Timber.e("CALLING HOME FRAGMENT")
         setupTabLayout()
     }
 
@@ -91,4 +101,6 @@ class HomeFragment: Fragment() {
         _binding.viewPager2.unregisterOnPageChangeCallback(pageChangeCallback)
         super.onStop()
     }
+
+
 }

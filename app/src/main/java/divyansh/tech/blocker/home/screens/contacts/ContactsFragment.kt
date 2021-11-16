@@ -1,12 +1,30 @@
 package divyansh.tech.blocker.home.screens.contacts
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
+import divyansh.tech.blocker.common.ContactModel
 import divyansh.tech.blocker.databinding.FragmentContactsBinding
+import divyansh.tech.blocker.home.screens.contacts.epoxy.EpoxyContactsController
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ContactsFragment: Fragment() {
@@ -16,6 +34,11 @@ class ContactsFragment: Fragment() {
     }
 
     private lateinit var _binding: FragmentContactsBinding
+    private val viewModel by viewModels<ContactsViewModel>()
+
+    private val contactController by lazy {
+        EpoxyContactsController()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,5 +51,45 @@ class ContactsFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkPermissions()
+        setupRecyclerView()
+        setupObservers()
+    }
+
+    private fun checkPermissions() {
+        Dexter.withContext(requireContext())
+            .withPermission(Manifest.permission.READ_CONTACTS)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse) { /* ... */
+                    //TODO: GET CONTACTS
+                    viewModel.getContacts(requireActivity().contentResolver)
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse) { /* ... */
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest,
+                    token: PermissionToken
+                ) { /* ... */
+                    token.continuePermissionRequest()
+                }
+            }).check()
+    }
+
+    private fun setupRecyclerView() {
+        _binding.contactsRv.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = contactController.adapter
+        }
+    }
+
+    private fun setupObservers() {
+        viewModel.contactsLiveData.observe(
+            viewLifecycleOwner,
+            Observer {
+                contactController.setData(it)
+            }
+        )
     }
 }
