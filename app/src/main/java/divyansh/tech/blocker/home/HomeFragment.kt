@@ -29,7 +29,7 @@ import timber.log.Timber
 class HomeFragment: Fragment() {
 
     private lateinit var _binding: FragmentHomeBinding
-    
+
     private val viewModel by activityViewModels<HomeViewModel>()
 
     private lateinit var pagerAdapter: HomeViewPagerAdapter

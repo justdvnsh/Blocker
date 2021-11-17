@@ -54,10 +54,18 @@ class IncomingCallReceiver: BroadcastReceiver() {
                     m.setAccessible(true)
                     telephonyService = m.invoke(tm) as ITelephony
                     if (number != null) {
-                        Toast.makeText(context, "NUMBER IS NOT NULL", Toast.LENGTH_SHORT).show()
-                        telephonyService.endCall()
-                        Toast.makeText(context, "Ending the call from: $number", Toast.LENGTH_SHORT)
-                            .show()
+                        GlobalScope.launch(Dispatchers.IO) {
+                            blockedNumbers = dao.getAllBlockedContacts()
+                            blockedNumbers.forEach {
+                                if (number == it.phone) {
+                                    telephonyService.endCall()
+                                    createNotificationChannel()
+                                    addNotification(it.name, context)
+                                }
+                            }
+                        }
+//                        Toast.makeText(context, "Ending the call from: $number", Toast.LENGTH_SHORT)
+//                            .show()
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -70,7 +78,7 @@ class IncomingCallReceiver: BroadcastReceiver() {
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        Toast.makeText(context, "INSIDE TELECOM MANAGER", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(context, "INSIDE TELECOM MANAGER", Toast.LENGTH_SHORT).show()
                         GlobalScope.launch(Dispatchers.IO) {
                             blockedNumbers = dao.getAllBlockedContacts()
                             blockedNumbers.forEach {
@@ -85,13 +93,13 @@ class IncomingCallReceiver: BroadcastReceiver() {
                 } else {
                     //Ask for permission here
                 }
-                Toast.makeText(context, "Ring $number", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Ring $number", Toast.LENGTH_SHORT).show()
             }
             if (state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK, ignoreCase = true)) {
-                Toast.makeText(context, "Answered $number", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Answered $number", Toast.LENGTH_SHORT).show()
             }
             if (state.equals(TelephonyManager.EXTRA_STATE_IDLE, ignoreCase = true)) {
-                Toast.makeText(context, "Idle $number", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Idle $number", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             e.printStackTrace()

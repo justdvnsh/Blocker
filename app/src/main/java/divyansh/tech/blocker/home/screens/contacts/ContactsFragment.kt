@@ -16,10 +16,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import divyansh.tech.blocker.common.ContactModel
@@ -77,21 +79,24 @@ class ContactsFragment: Fragment() {
 
     private fun checkPermissions() {
         Dexter.withContext(requireContext())
-            .withPermission(Manifest.permission.READ_CONTACTS)
-            .withListener(object : PermissionListener {
-                override fun onPermissionGranted(response: PermissionGrantedResponse) { /* ... */
-                    //TODO: GET CONTACTS
+            .withPermissions(
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.READ_CALL_LOG,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.ANSWER_PHONE_CALLS
+            )
+            .withListener(object : MultiplePermissionsListener {
+
+                override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
                     viewModel.getContacts(requireActivity().contentResolver)
                 }
 
-                override fun onPermissionDenied(response: PermissionDeniedResponse) { /* ... */
-                }
-
                 override fun onPermissionRationaleShouldBeShown(
-                    permission: PermissionRequest,
-                    token: PermissionToken
-                ) { /* ... */
-                    token.continuePermissionRequest()
+                    p0: MutableList<PermissionRequest>?,
+                    p1: PermissionToken
+                ) {
+                    p1.continuePermissionRequest()
                 }
             }).check()
     }
