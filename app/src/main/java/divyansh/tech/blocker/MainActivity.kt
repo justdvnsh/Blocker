@@ -22,7 +22,6 @@ import divyansh.tech.blocker.common.IncomingCallReceiver
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val recv = IncomingCallReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

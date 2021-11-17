@@ -8,14 +8,31 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.telecom.TelecomManager
+import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import android.widget.Toast
+import androidx.annotation.CallSuper
 import androidx.core.app.ActivityCompat
 import java.lang.reflect.Method
 import com.android.internal.telephony.ITelephony
+import dagger.assisted.AssistedFactory
+import dagger.hilt.android.AndroidEntryPoint
+import divyansh.tech.blocker.common.database.ContactDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 
-class IncomingCallReceiver : BroadcastReceiver() {
+@AndroidEntryPoint
+class IncomingCallReceiver: BroadcastReceiver() {
+
+    @Inject
+    lateinit var dao: ContactDao
+
+    private lateinit var blockedNumbers: List<ContactModel>
+
     @SuppressLint("SoonBlockedPrivateApi")
     override fun onReceive(context: Context, intent: Intent) {
         val telephonyService: ITelephony
@@ -46,7 +63,13 @@ class IncomingCallReceiver : BroadcastReceiver() {
                 ) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         Toast.makeText(context, "INSIDE TELECOM MANAGER", Toast.LENGTH_SHORT).show()
-                        if (number.equals("+916394015772")) telecomManager.endCall()
+                        runBlocking {
+                            blockedNumbers = dao.getAllBlockedContacts()
+                            blockedNumbers.forEach {
+                                Toast.makeText(context, "$number and ${it.phone}", Toast.LENGTH_SHORT).show()
+                                if (number.equals(it.phone)) telecomManager.endCall()
+                            }
+                        }
                     }
                 } else {
                     //Ask for permission here
