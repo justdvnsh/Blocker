@@ -2,33 +2,33 @@
 
 [Here](https://drive.google.com/file/d/1tMhVuqLrf33FM8dlvpiLadaypVJ4QsXs/view?usp=sharing) is the video demonstrating the functionality.
 
-[x] The user will be able to add & delete contacts/numbers to block.
+- [x] The user will be able to add & delete contacts/numbers to block.
 
-[x] The user can pick the contact from the contact list or just enter the number.
+- [x] The user can pick the contact from the contact list or just enter the number.
 
-[x] The app should listen for incoming calls and disconnect them if the caller is from the list of blocked contacts.
+- [x] The app should listen for incoming calls and disconnect them if the caller is from the list of blocked contacts.
 
-[x] The app should notify the call which were blocked by the app.
+- [x] The app should notify the call which were blocked by the app.
 
 ## Requirements:
 
-[x] The app should follow MVVM architecture.
+- [x] The app should follow MVVM architecture.
 
-[x] The app should use a database of your choice to store the blocked contacts.
+- [x] The app should use a database of your choice to store the blocked contacts.
 
-[x] The app should ask for the required permissions.
+- [x] The app should ask for the required permissions.
 
-[x] The app should work on support devices with API 21 and above.
+- [x] The app should work on support devices with API 21 and above.
 
-[x] The app should be written in kotlin.
+- [x] The app should be written in kotlin.
 
-[x] The app should use coroutines for background operations.
+- [x] The app should use coroutines for background operations.
 
 ## Things we would love to see:
 
-[x] The app should have a minimal UI. (Show us your creativity)
+- [x] The app should have a minimal UI. (Show us your creativity)
 
-[x] Use Dependency Injection
+- [x] Use Dependency Injection
 
 ## Known Issues - 
 
