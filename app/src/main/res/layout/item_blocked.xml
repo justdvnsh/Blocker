@@ -9,7 +9,7 @@
             />
         <variable
             name="callbacks"
-            type="divyansh.tech.blocker.home.screens.contacts.callbacks.ContactsCallbacks"
+            type="divyansh.tech.blocker.home.screens.blocked.callbacks.BlockedContactCallbacks"
             />
     </data>
     <androidx.cardview.widget.CardView
@@ -19,7 +19,7 @@
         android:layout_margin="@dimen/spacing_very_small_8dp"
         android:elevation="@dimen/spacing_very_small_8dp"
         android:background="@color/quiz_option_submit_button_disabled"
-        android:onClick="@{() -> callbacks.onContactClick(contact)}"
+        android:onClick="@{() -> callbacks.onBlockedContactClicked(contact)}"
         >
         <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"

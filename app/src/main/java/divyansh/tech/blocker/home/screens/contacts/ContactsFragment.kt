@@ -22,9 +22,13 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import divyansh.tech.blocker.common.ContactModel
+import divyansh.tech.blocker.common.EventObserver
 import divyansh.tech.blocker.databinding.FragmentContactsBinding
+import divyansh.tech.blocker.home.screens.contacts.callbacks.ContactsCallbackFactory
+import divyansh.tech.blocker.home.screens.contacts.callbacks.ContactsCallbacks
 import divyansh.tech.blocker.home.screens.contacts.epoxy.EpoxyContactsController
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ContactsFragment: Fragment() {
@@ -36,8 +40,18 @@ class ContactsFragment: Fragment() {
     private lateinit var _binding: FragmentContactsBinding
     private val viewModel by viewModels<ContactsViewModel>()
 
+    @Inject
+    lateinit var contactsCallbackFactory: ContactsCallbackFactory
+
+    private val callbacks by lazy {
+        contactsCallbackFactory.createCallback(
+            requireActivity(),
+            viewModel
+        )
+    }
+
     private val contactController by lazy {
-        EpoxyContactsController()
+        EpoxyContactsController(callbacks)
     }
 
     override fun onCreateView(
@@ -89,6 +103,14 @@ class ContactsFragment: Fragment() {
             viewLifecycleOwner,
             Observer {
                 contactController.setData(it)
+            }
+        )
+
+        viewModel.blockContactLiveData.observe(
+            viewLifecycleOwner,
+            EventObserver {
+                if (it)
+                    Toast.makeText(requireContext(), "Contact marked as Blocked", Toast.LENGTH_SHORT).show()
             }
         )
     }

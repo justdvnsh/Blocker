@@ -7,10 +7,14 @@ import android.provider.ContactsContract
 import android.widget.Toast
 import dagger.hilt.android.qualifiers.ApplicationContext
 import divyansh.tech.blocker.common.ContactModel
+import divyansh.tech.blocker.common.Result
+import divyansh.tech.blocker.common.database.ContactDao
 import timber.log.Timber
 import javax.inject.Inject
 
-class ContactsLocalRepo @Inject constructor() {
+class ContactsLocalRepo @Inject constructor(
+    private val dao: ContactDao
+) {
 
     @SuppressLint("Range")
     suspend fun getContacts(cr: ContentResolver): ArrayList<ContactModel> {
@@ -58,5 +62,15 @@ class ContactsLocalRepo @Inject constructor() {
         }
         Timber.e("CONTACTS -> $list")
         return list
+    }
+
+    suspend fun addContactToBlocked(contact: ContactModel): Result<Boolean> {
+        //TODO: Wrap in trycatch and return in Result<>
+        return try {
+            dao.addContactToBlocked(contact)
+            Result.Success(true)
+        } catch (e: Exception) {
+            Result.Success(false)
+        }
     }
 }
