@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Blocker</string>
+    <string name="enter_a_number_to_block">Enter a number to block</string>
 </resources>

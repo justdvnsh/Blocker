@@ -1,23 +1,8 @@
 package divyansh.tech.blocker
 
-import android.Manifest
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.telecom.Call
-import android.telephony.TelephonyManager
-import androidx.annotation.RequiresApi
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
-import divyansh.tech.blocker.common.CallReceiver
-import divyansh.tech.blocker.common.IncomingCallReceiver
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

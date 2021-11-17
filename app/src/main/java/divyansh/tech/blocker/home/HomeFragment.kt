@@ -29,9 +29,7 @@ import timber.log.Timber
 class HomeFragment: Fragment() {
 
     private lateinit var _binding: FragmentHomeBinding
-
-    //TODO: Convert this to a shared view model
-    //TODO: This viewModel would provide all the contacts.
+    
     private val viewModel by activityViewModels<HomeViewModel>()
 
     private lateinit var pagerAdapter: HomeViewPagerAdapter
@@ -56,12 +54,6 @@ class HomeFragment: Fragment() {
         setupTabLayout()
     }
 
-    //TODO: SETUP FAB -> it would allow user to type in a number to be added to blocked contacts
-
-
-    //TODO: Setup tab layout with 2 tabs -> Contacts & Blocked
-    //TODO: Contacts tab would provide all the contacts in the mobile device
-    //TODO: Blocked would contain a list of blocked contacts
     private fun setupTabLayout() {
         pagerAdapter = HomeViewPagerAdapter(
             fragmentManager = childFragmentManager,
